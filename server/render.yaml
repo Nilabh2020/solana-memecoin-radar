@@ -1,0 +1,16 @@
+services:
+  - type: web
+    runtime: node
+    name: memecoin-radar-api
+    repo: https://github.com/Nilabh2020/solana-memecoin-radar
+    rootDir: server
+    plan: free
+    buildCommand: npm install
+    startCommand: node src/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CORS_ORIGIN
+        value: https://solana-memecoin-radar.vercel.app
+      - key: PORT
+        value: 3001
