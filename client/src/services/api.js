@@ -2,6 +2,7 @@ import { API_BASE } from '../utils/constants.js';
 import { supabase } from './supabase.js';
 
 async function getAuthHeaders() {
+  if (!supabase) return {};
   try {
     const { data: { session } } = await supabase.auth.getSession();
     if (session?.access_token) {
