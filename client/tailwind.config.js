@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -30,12 +31,29 @@ export default {
           400: '#0d0b17',
           500: '#0a0812',
         },
+        // Light mode surfaces (Tahoe-inspired)
+        tahoe: {
+          50: '#fafafa',
+          100: '#f5f5f7',
+          200: '#e8e8ed',
+          300: '#d2d2d7',
+          400: '#86868b',
+          500: '#6e6e73',
+          600: '#1d1d1f',
+        },
       },
       boxShadow: {
         'glow-purple': '0 0 20px rgba(139, 92, 246, 0.3)',
         'glow-blue': '0 0 20px rgba(59, 130, 246, 0.3)',
         'glow-green': '0 0 15px rgba(34, 197, 94, 0.3)',
         'glow-red': '0 0 15px rgba(239, 68, 68, 0.3)',
+        'tahoe': '0 2px 20px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.04)',
+        'tahoe-lg': '0 8px 40px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04)',
+        'tahoe-dark': '0 2px 20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.06)',
+      },
+      borderRadius: {
+        'tahoe': '14px',
+        'tahoe-lg': '18px',
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',

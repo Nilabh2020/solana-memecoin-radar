@@ -9,6 +9,8 @@ import logger from './utils/logger.js';
 import tokenRoutes from './routes/tokens.js';
 import statsRoutes from './routes/stats.js';
 import healthRoutes from './routes/health.js';
+import authRoutes from './routes/auth.js';
+import paymentRoutes from './routes/payments.js';
 
 import solanaService from './services/solanaService.js';
 import websocketService from './services/websocketService.js';
@@ -33,8 +35,8 @@ app.use(cors({
     );
     callback(null, isAllowed);
   },
-  methods: ['GET'],
-  credentials: false,
+  methods: ['GET', 'POST', 'PUT', 'PATCH'],
+  credentials: true,
 }));
 
 // Security middleware
@@ -47,6 +49,8 @@ app.use(express.json({ limit: '1mb' }));
 app.use('/api/tokens', tokenRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/health', healthRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // 404 handler
 app.use((req, res) => {

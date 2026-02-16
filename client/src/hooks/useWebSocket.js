@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { WS_URL } from '../utils/constants.js';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const RECONNECT_DELAY = 3000;
 const MAX_RECONNECT_DELAY = 30000;
 
 export function useWebSocket() {
+  const { isPremium } = useAuth();
   const [connected, setConnected] = useState(false);
   const [lastMessage, setLastMessage] = useState(null);
   const wsRef = useRef(null);
@@ -13,6 +15,8 @@ export function useWebSocket() {
   const listeners = useRef(new Map());
 
   const connect = useCallback(() => {
+    // Only allow WebSocket for premium users
+    if (!isPremium) return;
     if (wsRef.current?.readyState === WebSocket.OPEN) return;
 
     try {
@@ -41,16 +45,16 @@ export function useWebSocket() {
 
       ws.onclose = () => {
         setConnected(false);
-        scheduleReconnect();
+        if (isPremium) scheduleReconnect();
       };
 
       ws.onerror = () => {
         ws.close();
       };
     } catch {
-      scheduleReconnect();
+      if (isPremium) scheduleReconnect();
     }
-  }, []);
+  }, [isPremium]);
 
   function scheduleReconnect() {
     if (reconnectTimer.current) return;
@@ -73,12 +77,18 @@ export function useWebSocket() {
   }, []);
 
   useEffect(() => {
-    connect();
+    if (isPremium) {
+      connect();
+    } else {
+      // Disconnect if downgraded
+      wsRef.current?.close();
+      setConnected(false);
+    }
     return () => {
       if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
       wsRef.current?.close();
     };
-  }, [connect]);
+  }, [connect, isPremium]);
 
   return { connected, lastMessage, subscribe };
 }

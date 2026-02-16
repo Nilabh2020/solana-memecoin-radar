@@ -17,6 +17,8 @@ function deriveWsUrl() {
 }
 
 export const WS_URL = deriveWsUrl();
+
+// Legacy flag — kept for backwards compat but tier is now driven by AuthContext
 export const PRO_FEATURES_ENABLED = import.meta.env.VITE_ENABLE_PRO_FEATURES === 'true';
 
 export const SORT_OPTIONS = [
@@ -27,4 +29,10 @@ export const SORT_OPTIONS = [
   { key: 'buyRatio', label: 'Buy/Sell Ratio' },
 ];
 
-export const REFRESH_INTERVAL = 10000;
+// Refresh intervals by tier
+export const REFRESH_INTERVAL_FREE = 30000;  // 30s for free
+export const REFRESH_INTERVAL_PREMIUM = 10000; // 10s for premium
+export const REFRESH_INTERVAL = 10000; // default (backwards compat)
+
+// Payment
+export const PAYMENT_WALLET = 'EcNDgT8jmBqDiRm4zcg4PjqdqjBwmCF51v2h1KUuo9z7';

@@ -4,28 +4,28 @@ import ProBadge from './ProBadge.jsx';
 
 function AlertItem({ alert }) {
   return (
-    <div className="flex items-center gap-3 p-3 bg-surface-300/50 rounded-lg border border-primary-900/20 animate-slide-up">
-      <div className="w-8 h-8 rounded-full bg-yellow-500/10 flex items-center justify-center flex-shrink-0">
-        <svg className="w-4 h-4 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div className="flex items-center gap-3 p-3 bg-tahoe-100/50 dark:bg-surface-300/50 rounded-xl border border-tahoe-200 dark:border-primary-900/20 animate-slide-up">
+      <div className="w-8 h-8 rounded-full bg-yellow-50 dark:bg-yellow-500/10 flex items-center justify-center flex-shrink-0">
+        <svg className="w-4 h-4 text-yellow-500 dark:text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
         </svg>
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-gray-200 truncate">
-          {alert.token?.name} <span className="text-gray-500">({alert.token?.symbol})</span>
+        <p className="text-sm font-medium text-tahoe-600 dark:text-gray-200 truncate">
+          {alert.token?.name} <span className="text-tahoe-400 dark:text-gray-500">({alert.token?.symbol})</span>
         </p>
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-tahoe-400 dark:text-gray-500">
           Volume spiked {alert.spike?.toFixed(1)}x | Vol: {formatMarketCap(alert.currentVolume)}
         </p>
       </div>
-      <span className="text-[10px] text-gray-600 flex-shrink-0">
+      <span className="text-[10px] text-tahoe-300 dark:text-gray-600 flex-shrink-0">
         {new Date(alert.timestamp).toLocaleTimeString()}
       </span>
     </div>
   );
 }
 
-export default function AlertsFeed({ subscribe }) {
+export default function AlertsFeed({ subscribe, onPricingClick }) {
   const [alerts, setAlerts] = useState([]);
 
   const handleAlert = useCallback((msg) => {
@@ -38,16 +38,16 @@ export default function AlertsFeed({ subscribe }) {
   }, [subscribe, handleAlert]);
 
   return (
-    <ProBadge feature="Volume Spike Alerts">
+    <ProBadge feature="Volume Spike Alerts" onClick={onPricingClick}>
       <div className="glass-card p-4 glow-border">
-        <h3 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
-          <svg className="w-4 h-4 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <h3 className="text-sm font-semibold text-tahoe-600 dark:text-gray-300 mb-3 flex items-center gap-2">
+          <svg className="w-4 h-4 text-yellow-500 dark:text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>
           Volume Alerts
         </h3>
         {alerts.length === 0 ? (
-          <p className="text-xs text-gray-600 text-center py-4">No alerts yet. Monitoring for volume spikes...</p>
+          <p className="text-xs text-tahoe-400 dark:text-gray-600 text-center py-4">No alerts yet. Monitoring for volume spikes...</p>
         ) : (
           <div className="space-y-2 max-h-[300px] overflow-y-auto">
             {alerts.map((alert, i) => (

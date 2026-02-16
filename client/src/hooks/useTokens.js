@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { getTokens, getHighMomentumTokens, getStats } from '../services/api.js';
-import { REFRESH_INTERVAL } from '../utils/constants.js';
+import { REFRESH_INTERVAL_FREE, REFRESH_INTERVAL_PREMIUM } from '../utils/constants.js';
+import { useAuth } from '../context/AuthContext.jsx';
 
 export function useTokens() {
+  const { isPremium } = useAuth();
   const [tokens, setTokens] = useState([]);
   const [highMomentum, setHighMomentum] = useState([]);
   const [stats, setStats] = useState(null);
@@ -10,8 +12,10 @@ export function useTokens() {
   const [error, setError] = useState(null);
   const [sort, setSort] = useState({ key: 'createdAt', order: 'desc' });
   const [search, setSearch] = useState('');
-  const [pagination, setPagination] = useState({ total: 0, limit: 50, offset: 0 });
+  const [pagination, setPagination] = useState({ total: 0, limit: isPremium ? 50 : 20, offset: 0 });
   const intervalRef = useRef(null);
+
+  const refreshInterval = isPremium ? REFRESH_INTERVAL_PREMIUM : REFRESH_INTERVAL_FREE;
 
   const fetchData = useCallback(async () => {
     try {
@@ -19,7 +23,7 @@ export function useTokens() {
         getTokens({
           sort: sort.key,
           order: sort.order,
-          search,
+          search: isPremium ? search : '',
           limit: pagination.limit,
           offset: pagination.offset,
         }),
@@ -37,15 +41,24 @@ export function useTokens() {
     } finally {
       setLoading(false);
     }
-  }, [sort, search, pagination.limit, pagination.offset]);
+  }, [sort, search, pagination.limit, pagination.offset, isPremium]);
+
+  // Update limit when tier changes
+  useEffect(() => {
+    setPagination(prev => ({
+      ...prev,
+      limit: isPremium ? 50 : 20,
+      offset: 0,
+    }));
+  }, [isPremium]);
 
   useEffect(() => {
     setLoading(true);
     fetchData();
 
-    intervalRef.current = setInterval(fetchData, REFRESH_INTERVAL);
+    intervalRef.current = setInterval(fetchData, refreshInterval);
     return () => clearInterval(intervalRef.current);
-  }, [fetchData]);
+  }, [fetchData, refreshInterval]);
 
   const handleSort = useCallback((key) => {
     setSort(prev => ({

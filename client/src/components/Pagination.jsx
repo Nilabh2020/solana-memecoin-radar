@@ -23,15 +23,15 @@ export default function Pagination({ pagination, onPageChange }) {
 
   return (
     <div className="flex items-center justify-between px-2 py-3">
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-tahoe-400 dark:text-gray-500">
         Showing {offset + 1}-{Math.min(offset + limit, total)} of {total}
       </p>
       <div className="flex items-center gap-1">
         <button
           onClick={() => goToPage(currentPage - 1)}
           disabled={currentPage === 1}
-          className="px-2 py-1 text-xs rounded bg-surface-300 text-gray-400
-                     hover:bg-surface-200 disabled:opacity-30 disabled:cursor-not-allowed
+          className="px-2 py-1 text-xs rounded-lg bg-tahoe-200/60 dark:bg-surface-300 text-tahoe-500 dark:text-gray-400
+                     hover:bg-tahoe-200 dark:hover:bg-surface-200 disabled:opacity-30 disabled:cursor-not-allowed
                      transition-colors"
         >
           Prev
@@ -40,10 +40,10 @@ export default function Pagination({ pagination, onPageChange }) {
           <button
             key={page}
             onClick={() => goToPage(page)}
-            className={`px-2.5 py-1 text-xs rounded transition-colors ${
+            className={`px-2.5 py-1 text-xs rounded-lg transition-colors ${
               page === currentPage
-                ? 'bg-primary-600 text-white'
-                : 'bg-surface-300 text-gray-400 hover:bg-surface-200'
+                ? 'bg-primary-500 dark:bg-primary-600 text-white'
+                : 'bg-tahoe-200/60 dark:bg-surface-300 text-tahoe-500 dark:text-gray-400 hover:bg-tahoe-200 dark:hover:bg-surface-200'
             }`}
           >
             {page}
@@ -52,8 +52,8 @@ export default function Pagination({ pagination, onPageChange }) {
         <button
           onClick={() => goToPage(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="px-2 py-1 text-xs rounded bg-surface-300 text-gray-400
-                     hover:bg-surface-200 disabled:opacity-30 disabled:cursor-not-allowed
+          className="px-2 py-1 text-xs rounded-lg bg-tahoe-200/60 dark:bg-surface-300 text-tahoe-500 dark:text-gray-400
+                     hover:bg-tahoe-200 dark:hover:bg-surface-200 disabled:opacity-30 disabled:cursor-not-allowed
                      transition-colors"
         >
           Next
