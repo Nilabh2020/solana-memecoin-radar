@@ -7,7 +7,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!!supabase);
 
   const fetchProfile = useCallback(async () => {
     try {
@@ -16,12 +16,13 @@ export function AuthProvider({ children }) {
         setProfile(res.data);
       }
     } catch {
-      // Not logged in or token expired
       setProfile(null);
     }
   }, []);
 
   useEffect(() => {
+    if (!supabase) return;
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -45,24 +46,27 @@ export function AuthProvider({ children }) {
   }, [fetchProfile]);
 
   const signUp = async (email, password) => {
+    if (!supabase) throw new Error('Auth not configured');
     const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) throw error;
     return data;
   };
 
   const signIn = async (email, password) => {
+    if (!supabase) throw new Error('Auth not configured');
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
     return data;
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    if (supabase) await supabase.auth.signOut();
     setUser(null);
     setProfile(null);
   };
 
   const getAccessToken = async () => {
+    if (!supabase) return null;
     const { data: { session } } = await supabase.auth.getSession();
     return session?.access_token || null;
   };
