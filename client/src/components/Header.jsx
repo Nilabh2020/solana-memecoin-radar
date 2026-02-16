@@ -5,7 +5,7 @@ import AccountMenu from './AccountMenu.jsx';
 
 export default function Header({ connected, onRefresh, onLoginClick, onUpgrade, onPricingClick }) {
   const [refreshing, setRefreshing] = useState(false);
-  const { user, loading } = useAuth();
+  const { user, isPremium, loading } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
   function handleRefresh() {
@@ -85,13 +85,15 @@ export default function Header({ connected, onRefresh, onLoginClick, onUpgrade, 
           <div className="flex items-center gap-2">
             <div
               className={`w-2 h-2 rounded-full ${
-                connected
-                  ? 'bg-green-400 shadow-glow-green'
-                  : 'bg-red-400 shadow-glow-red'
+                isPremium
+                  ? (connected ? 'bg-green-400 shadow-glow-green' : 'bg-yellow-400')
+                  : 'bg-green-400 shadow-glow-green'
               }`}
             />
             <span className="text-xs text-tahoe-400 dark:text-gray-500 hidden sm:block">
-              {connected ? 'Live' : 'Connecting...'}
+              {isPremium
+                ? (connected ? 'Live' : 'Connecting...')
+                : 'Online'}
             </span>
           </div>
 
