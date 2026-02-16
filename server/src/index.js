@@ -20,13 +20,16 @@ import { WS_EVENTS } from './config/constants.js';
 const app = express();
 const server = createServer(app);
 
-// CORS — allow configured origin + Vercel preview URLs
+// CORS — allow configured origin + Render/Vercel preview URLs
 app.use(cors({
   origin(origin, callback) {
     // Allow requests with no origin (curl, server-to-server)
     if (!origin) return callback(null, true);
+    // Wildcard allows all origins
+    if (env.corsOrigin === '*') return callback(null, true);
     const allowed = [
       env.corsOrigin,
+      /\.onrender\.com$/,
       /\.vercel\.app$/,
       /localhost/,
     ];
