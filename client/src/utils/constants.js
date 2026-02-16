@@ -1,13 +1,16 @@
 // In production, VITE_API_URL points to the Render backend.
 // In dev, Vite proxy forwards /api to localhost:3001 so API_BASE is empty.
-export const API_BASE = import.meta.env.VITE_API_URL || '';
+const PROD_API_URL = 'https://solana-memecoin-radar.onrender.com';
+export const API_BASE = import.meta.env.VITE_API_URL
+  || (import.meta.env.PROD ? PROD_API_URL : '');
 
 // WebSocket URL: derive from API_BASE or fall back to dev
 function deriveWsUrl() {
   if (import.meta.env.VITE_WS_URL) return import.meta.env.VITE_WS_URL;
-  if (import.meta.env.VITE_API_URL) {
+  const apiUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? PROD_API_URL : '');
+  if (apiUrl) {
     // Convert https://foo.render.com -> wss://foo.render.com/ws
-    return import.meta.env.VITE_API_URL
+    return apiUrl
       .replace(/^https:/, 'wss:')
       .replace(/^http:/, 'ws:')
       .replace(/\/$/, '') + '/ws';
