@@ -6,6 +6,10 @@ import logger from '../utils/logger.js';
  * Expects: Authorization: Bearer <access_token>
  */
 export async function authMiddleware(req, res, next) {
+  if (!supabase) {
+    return res.status(503).json({ success: false, error: 'Auth not configured' });
+  }
+
   const authHeader = req.headers.authorization;
   if (!authHeader?.startsWith('Bearer ')) {
     return res.status(401).json({ success: false, error: 'Missing authorization header' });
@@ -32,6 +36,11 @@ export async function authMiddleware(req, res, next) {
  * Optional auth — attaches user if token present, continues without if not.
  */
 export async function optionalAuth(req, res, next) {
+  if (!supabase) {
+    req.user = null;
+    return next();
+  }
+
   const authHeader = req.headers.authorization;
   if (!authHeader?.startsWith('Bearer ')) {
     req.user = null;
